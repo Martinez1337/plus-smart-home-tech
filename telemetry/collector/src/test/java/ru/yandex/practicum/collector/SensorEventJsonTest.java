@@ -1,4 +1,3 @@
-
 package ru.yandex.practicum.collector;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
