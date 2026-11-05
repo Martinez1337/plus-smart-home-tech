@@ -10,10 +10,11 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 
+import java.time.Duration;
 import java.util.Objects;
 
 @Service
-public class KafkaEventPublisher {
+public class KafkaEventPublisher implements AutoCloseable {
     private static final Logger log = LoggerFactory.getLogger(KafkaEventPublisher.class);
 
     private final Producer<String, SpecificRecordBase> producer;
@@ -58,5 +59,15 @@ public class KafkaEventPublisher {
                     metadata.offset()
             );
         });
+    }
+
+    @Override
+    public void close() throws Exception {
+        log.info("Shutting down Kafka Producer");
+
+        producer.flush();
+        producer.close(Duration.ofSeconds(10));
+
+        log.info("Kafka Producer closed");
     }
 }

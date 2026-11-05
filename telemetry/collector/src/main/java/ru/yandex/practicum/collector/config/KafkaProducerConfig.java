@@ -8,14 +8,14 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.yandex.practicum.collector.kafka.GeneralAvroSerializer;
+import ru.yandex.practicum.kafka.telemetry.serialization.GeneralAvroSerializer;
 
 import java.util.Properties;
 
 @Configuration
 public class KafkaProducerConfig {
 
-    @Bean(destroyMethod = "close")
+    @Bean(destroyMethod = "")
     public Producer<String, SpecificRecordBase> kafkaProducer(
             @Value("${collector.kafka.bootstrap-servers}") String bootstrapServers
     ) {
@@ -24,7 +24,6 @@ public class KafkaProducerConfig {
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, GeneralAvroSerializer.class);
-        properties.put(ProducerConfig.ACKS_CONFIG, "all");
         properties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
 
         return new KafkaProducer<>(properties);
